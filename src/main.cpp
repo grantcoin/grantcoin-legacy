@@ -1009,6 +1009,8 @@ void static InvalidChainFound(CBlockIndex* pindexNew)
 
 void CBlock::UpdateTime(const CBlockIndex* pindexPrev)
 {
+    nTime = max(pindexPrev->GetBlockTime()+60+1, GetBlockTime());
+    nTime = max(GetAdjustedTime(), GetBlockTime());
     nTime = max(GetBlockTime(), GetAdjustedTime());
 }
 
@@ -1967,9 +1969,15 @@ bool CBlock::AcceptBlock()
     if (nBits != GetNextTargetRequired(pindexPrev, IsProofOfStake()))
         return DoS(100, error("AcceptBlock() : incorrect proof-of-work/proof-of-stake"));
 
+
+    if (nHeight > 250000){
+        if (GetBlockTime() <= (pindexPrev->GetBlockTime() + 60))
+            return error("AcceptBlock(height=%d) : block's timestamp (%"PRI64d") is too soon after prev(%"PRI64d")", nHeight, GetBlockTime(), pindexPrev->GetBlockTime());
+    } else {
     // Check timestamp against prev
     if (GetBlockTime() <= pindexPrev->GetMedianTimePast() || GetBlockTime() + nMaxClockDrift < pindexPrev->GetBlockTime())
         return error("AcceptBlock() : block's timestamp is too early");
+    }
 
     // Check that all transactions are finalized
     BOOST_FOREACH(const CTransaction& tx, vtx)
