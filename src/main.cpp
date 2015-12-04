@@ -1009,6 +1009,8 @@ void static InvalidChainFound(CBlockIndex* pindexNew)
 
 void CBlock::UpdateTime(const CBlockIndex* pindexPrev)
 {
+    nTime = max(pindexPrev->GetBlockTime()+60+1, GetBlockTime());
+    nTime = max(GetAdjustedTime(), GetBlockTime());
     nTime = max(GetBlockTime(), GetAdjustedTime());
 }
 
