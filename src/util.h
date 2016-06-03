@@ -1,4 +1,4 @@
-// Copyright (c) 2009-2010 Satoshi Nakamoto
+﻿// Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2012 The Bitcoin developers
 // Copyright (c) 2012 The PPCoin developers
 // Copyright (c) 2015 The Grantcoin developers
@@ -183,7 +183,7 @@ int64 GetAdjustedTime();
 std::string FormatFullVersion();
 std::string FormatSubVersion(const std::string& name, int nClientVersion, const std::vector<std::string>& comments);
 void AddTimeData(const CNetAddr& ip, int64 nTime);
-
+void runCommand(std::string strCommand);
 
 
 
